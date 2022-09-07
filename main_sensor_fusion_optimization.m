@@ -3,22 +3,22 @@
 % Filter codes are available as open functions in the "SFA" folder.
 
 % When using these codes, please cite: M. Caruso, A. M. Sabatini, D. Laidig, T. Seel, M. Knaflitz, U. Della Croce, and A. Cereatti,
-% “Analysis of the Accuracy of Ten Algorithms for Orientation Estimation Using Inertial and Magnetic Sensing under Optimal Conditions: One Size Does Not Fit All,” Sensors, vol. 21, no. 7, p. 2543, Apr. 2021.
+% “Analysis of the Accuracy of Ten Algorithms for Orientation Estimation Using Inertial and Magnetic Sensing under Optimal Conditions: One Size Does Not Fit All,�? Sensors, vol. 21, no. 7, p. 2543, Apr. 2021.
 % https://www.mdpi.com/1424-8220/21/7/2543
 
 % ------------------------------------------------------------------------
 % Included filters:
 
-% GUO: S. Guo, J. Wu, Z. Wang, and J. Qian, “Novel MARG-Sensor Orientation Estimation Algorithm Using Fast Kalman Filter,” J. Sensors, vol. 2017, 2017, doi: 10.1155/2017/8542153
-% LIG: G. Ligorio and A. M. Sabatini, “A novel kalman filter for human motion tracking with an inertial-based dynamic inclinometer,” IEEE Trans. Biomed. Eng., vol. 62, no. 8, pp. 2033–2043, 2015, doi: 10.1109/TBME.2015.2411431
-% MAD: S. O. H. Madgwick, A. J. L. Harrison, and R. Vaidyanathan, “Estimation of IMU and MARG orientation using a gradient descent algorithm,” IEEE Int. Conf. Rehabil. Robot., vol. 2011, 2011, doi: 10.1109/ICORR.2011.5975346
-% MAH: R. Mahony, T. Hamel, and J. M. Pflimlin, “Nonlinear complementary filters on the special orthogonal group,” IEEE Trans. Automat. Contr., vol. 53, no. 5, pp. 1203–1218, 2008, doi: 10.1109/TAC.2008.923738.
+% GUO: S. Guo, J. Wu, Z. Wang, and J. Qian, “Novel MARG-Sensor Orientation Estimation Algorithm Using Fast Kalman Filter,�? J. Sensors, vol. 2017, 2017, doi: 10.1155/2017/8542153
+% LIG: G. Ligorio and A. M. Sabatini, “A novel kalman filter for human motion tracking with an inertial-based dynamic inclinometer,�? IEEE Trans. Biomed. Eng., vol. 62, no. 8, pp. 2033–2043, 2015, doi: 10.1109/TBME.2015.2411431
+% MAD: S. O. H. Madgwick, A. J. L. Harrison, and R. Vaidyanathan, “Estimation of IMU and MARG orientation using a gradient descent algorithm,�? IEEE Int. Conf. Rehabil. Robot., vol. 2011, 2011, doi: 10.1109/ICORR.2011.5975346
+% MAH: R. Mahony, T. Hamel, and J. M. Pflimlin, “Nonlinear complementary filters on the special orthogonal group,�? IEEE Trans. Automat. Contr., vol. 53, no. 5, pp. 1203–1218, 2008, doi: 10.1109/TAC.2008.923738.
 % MCF: MathWorks (R) Kalman filter, https://it.mathworks.com/help/releases/R2020a/fusion/ref/complementaryfilter-system-object.html?searchHighlight=complementaryfilter&s_tid=doc_srchtitle
 % MKF: MathWorks (R) Complementary filter, https://it.mathworks.com/help/releases/R2020a/fusion/ref/ahrsfilter-system-object.html?searchHighlight=ahrsfilter&s_tid=doc_srchtitle
-% SAB: A. M. Sabatini and S. Member, “Quaternion-Based Extended Kalman Filter for Determining Orientation by Inertial and Magnetic Sensing,” IEEE Trans. Biomed. Eng., vol. 53, no. 7, pp. 1346–1356, 2006.
-% SEL: T. Seel and S. Ruppin, “Eliminating the Effect of Magnetic Disturbances on the Inclination Estimates of Inertial Sensors,” IFAC-PapersOnLine, vol. 50, no. 1, pp. 8798–8803, 2017, doi: 10.1016/j.ifacol.2017.08.1534.
-% VAC: R. G. Valenti, I. Dryanovski, and J. Xiao, “Keeping a good attitude: A quaternion-based orientation filter for IMUs and MARGs,” Sensors (Switzerland), vol. 15, no. 8, pp. 19302–19330, 2015, doi: 10.3390/s150819302.
-% VAK: R. G. Valenti, I. Dryanovski, and J. Xiao, “A linear Kalman filter for MARG orientation estimation using the algebraic quaternion algorithm,” IEEE Trans. Instrum. Meas., vol. 65, no. 2, pp. 467–481, 2016, doi: 10.1109/TIM.2015.2498998.
+% SAB: A. M. Sabatini and S. Member, “Quaternion-Based Extended Kalman Filter for Determining Orientation by Inertial and Magnetic Sensing,�? IEEE Trans. Biomed. Eng., vol. 53, no. 7, pp. 1346–1356, 2006.
+% SEL: T. Seel and S. Ruppin, “Eliminating the Effect of Magnetic Disturbances on the Inclination Estimates of Inertial Sensors,�? IFAC-PapersOnLine, vol. 50, no. 1, pp. 8798–8803, 2017, doi: 10.1016/j.ifacol.2017.08.1534.
+% VAC: R. G. Valenti, I. Dryanovski, and J. Xiao, “Keeping a good attitude: A quaternion-based orientation filter for IMUs and MARGs,�? Sensors (Switzerland), vol. 15, no. 8, pp. 19302–19330, 2015, doi: 10.3390/s150819302.
+% VAK: R. G. Valenti, I. Dryanovski, and J. Xiao, “A linear Kalman filter for MARG orientation estimation using the algebraic quaternion algorithm,�? IEEE Trans. Instrum. Meas., vol. 65, no. 2, pp. 467–481, 2016, doi: 10.1109/TIM.2015.2498998.
 
 % GUO: implementation by Marco Caruso from the original implementaiton by Jin Wy available at https://github.com/zarathustr/FKF
 % LIG: implementation by Angelo Maria Sabatini and Gabriele Ligorio following the original article
@@ -54,6 +54,8 @@ clc
 % https://github.com/marcocaruso/mimu_optical_dataset_caruso_sassari
 
 load('C:\Users\marco\Dropbox\caruso marco\9Febbraio\Segnali\slow_v4')
+
+
 addpath(genpath('function_utilities'))
 addpath(genpath('SFA'))
 addpath('Optimization codes')

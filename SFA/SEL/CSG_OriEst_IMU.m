@@ -69,6 +69,8 @@ function [new_estimation_state, errorAngleIncl, errorAngleAzi] = CSG_OriEst_IMU(
     %     Zeta > 0 means that a bias will be estimated. The higher Zeta is chosen, the faster bias is estimated but overshoot and noise effects will increase.
     % #############################################################################################################################################################
     % #### Init declarations #####
+    Sigma_acc=0.00017;
+    Sigma_mag=0.000017;
     zeroEps                         = 1D-14;                                                            % treshold for if zero statementes (for debug)
     if (TauAcc == 0 || TauMag == 0)                                                                     % check taus!=0 to prevent division by zero
         disp('Error: TauMag or TauAcc is zero!');
@@ -128,6 +130,15 @@ function [new_estimation_state, errorAngleIncl, errorAngleAzi] = CSG_OriEst_IMU(
                                        sin(prediction_ang/2)*(gyromeas/gyro_norm)];                     % "
         q_gyro                      = quaternionMultiply(q_gyro, dq_gyro);                              % correct initial quaternion by dq_gyro in IMU frame!
 
+        
+        % this should be equivalent with 
+        %
+        % qDot = 0.5 * quaternProd(q, [0 Gyroscope(1) Gyroscope(2) Gyroscope(3)]) - obj.Beta * step';
+
+        % Integrate to yield quaternion
+        %q = q + qDot * obj.SamplePeriod;
+        %
+        %
         if (abs(norm(dq_gyro)-1)>zeroEps)                                                               % check for error (optional)
             disp('dq_gyro is not a unit quaternion'); end                                               % "
         if (abs(norm(q_gyro)-1)>zeroEps)                                                                % "
@@ -149,6 +160,10 @@ function [new_estimation_state, errorAngleIncl, errorAngleAzi] = CSG_OriEst_IMU(
             kp_acc                  = correctionRating ...                                              % calculate correction gain kp_acc from time constant
                                       * (1 - 1.4*TauAcc*sample_freq/(1.4*TauAcc*sample_freq+1));        % "
             correction_ang          = kp_acc * errorAngleIncl;                                          % calculate angle for correction
+           
+            if(validAccDataCount>100)
+            correction_ang          =  correction_ang* exp(-(correction_ang)^2/(2*Sigma_acc^2));
+            end
             correctionaxis_imuframe = cross(accmeas, gravref_imuframe(2:4));                            % rotation axis of correction is perpendicular to measurement and reference
             correctionaxis_imuframe = correctionaxis_imuframe/norm(correctionaxis_imuframe);            % normalize rotation axis
             dq_acc                  = [cos(correction_ang/2), ...                                       % build correction quaternion from axis and angle
@@ -172,7 +187,7 @@ function [new_estimation_state, errorAngleIncl, errorAngleAzi] = CSG_OriEst_IMU(
     % in: q_gyro_acc   out: q_gyro_acc_mag
     q_gyro_acc_mag                  = q_gyro_acc;                                                       % define to get an output even if input is zero
     if (magmeas(1) ~= 0 || magmeas(2) ~= 0 || magmeas(3) ~= 0)                                          % check magmeas to be valid
-        magref_fixedframe           = [0 1 0];                                                          % define magnetic field reference in fixed frame (choose [+/-1 0 0] or [0 +/-1 0] to define which fixed-frame coordinate axis points north/south)
+        magref_fixedframe           = [1 0 0];                                                          % define magnetic field reference in fixed frame (choose [+/-1 0 0] or [0 +/-1 0] to define which fixed-frame coordinate axis points north/south)
         magref_imuframe             = quaternionCoordTransform(q_gyro_acc, [0,magref_fixedframe]);      % transform magnetic field reference into IMU frame
         gravref_imuframe            = quaternionCoordTransform(q_gyro_acc, [0, gravref_fixedframe]);    % recalculate IMU frame coordinates of vertical axis (might be skipped)
 
@@ -184,6 +199,14 @@ function [new_estimation_state, errorAngleIncl, errorAngleAzi] = CSG_OriEst_IMU(
                 errorAngleAzi       = acos(magmeas_projected*magref_imuframe(2:4)');                    % calculate error angle between reference and measurment
                 kp_mag              = (1 - 1.4*TauMag*sample_freq/(1.4*TauMag*sample_freq+1));          % calculate correction gain  kp_mag from time constant
                 correction_ang      = kp_mag*errorAngleAzi;                                             % calculate angle for correction
+                
+                if(validAccDataCount==4510)
+                    flag=1;
+                end
+                if(validAccDataCount>100)
+                correction_ang          =  correction_ang* exp(-(correction_ang)^2/(2*Sigma_mag^2));
+                end
+            
                 correctionaxis_imuframe     = cross(magmeas_projected,magref_imuframe(2:4));            % rotation axis of correction is perpendicular to measurement and reference
                 correctionaxis_imuframe     = correctionaxis_imuframe/norm(correctionaxis_imuframe);    % normalize rotation axis
                 dq_mag              = [cos(correction_ang/2), ...                                       % build correction quaternion from axis and angle
